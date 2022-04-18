@@ -8,7 +8,7 @@ function daysInMonth (month, year) {
     return new Date(year, month+1, 0).getDate();
 }
 function getColumn(day){
-    const dayOfWeek = new Date(date.getFullYear(), date.getMonth(), day).getDay();
+    const dayOfWeek = new Date(date.getFullYear(), date.getMonth()+1, day).getDay();
     return dayOfWeek === 0 ? 7 : dayOfWeek;
 }
 
@@ -40,7 +40,7 @@ export default function Calendar() {
     const [events, setEvents] = useState([]);
 
     function configureDays(){
-        const dayCount = daysInMonth(date.getMonth(), date.getFullYear());
+        const dayCount = daysInMonth(date.getMonth()+1, date.getFullYear());
         const days = [];
         const positions = {};
         let row = 1;
@@ -55,8 +55,8 @@ export default function Calendar() {
                     key={`d${i}`}
                     number={i}
                     style={{
-                        gridColumnStart: column - 1,
-                        gridColumnEnd: column,
+                        gridColumnStart: column,
+                        gridColumnEnd: column + 1,
                         gridRowStart: row,
                         gridRowEnd: row + 1
                     }}
@@ -76,8 +76,8 @@ export default function Calendar() {
                 return <Event
                     key={`e${index}`}
                     style={{
-                        gridColumnStart: positions[event.start].column - 1,
-                        gridColumnEnd: positions[event.end].column,
+                        gridColumnStart: positions[event.start].column,
+                        gridColumnEnd: positions[event.end].column + 1,
                         gridRowStart: positions[event.start].row,
                         gridRowEnd: positions[event.end].row+1,
                         backgroundColor: event.color
@@ -94,9 +94,9 @@ export default function Calendar() {
                                     key={`e${index}_${i}`}
                                     style={{
                                         gridColumnStart: 1,
-                                        gridColumnEnd: positions[event.end].column,
+                                        gridColumnEnd: positions[event.end].column + 1,
                                         gridRowStart: i,
-                                        gridRowEnd: i+1,
+                                        gridRowEnd: i + 1,
                                         backgroundColor: event.color
                                     }}
                                     title={event.title}
@@ -108,8 +108,8 @@ export default function Calendar() {
                                 <Event
                                     key={`e${index}_${i}`}
                                     style={{
-                                        gridColumnStart: positions[event.start].column - 1,
-                                        gridColumnEnd: 7,
+                                        gridColumnStart: positions[event.start].column,
+                                        gridColumnEnd: 8,
                                         gridRowStart: i,
                                         gridRowEnd: i+1,
                                         backgroundColor: event.color
@@ -124,7 +124,7 @@ export default function Calendar() {
                                     key={`e${index}_${i}`}
                                     style={{
                                         gridColumnStart: 1,
-                                        gridColumnEnd: 7,
+                                        gridColumnEnd: 8,
                                         gridRowStart: i,
                                         gridRowEnd: i+1,
                                         backgroundColor: event.color
