@@ -1,12 +1,12 @@
 .container{
     position: relative;
+    --cell_height: 130px
 }
 .calendar{
     display: grid;
     width: 100%;
-    gap: 1px;
+    gap: 10px;
     grid-template-columns: repeat(7, 1fr);
-    background-color: black;
     z-index: 10;
 }
 .events{
@@ -15,16 +15,27 @@
     left: 0;
     width: 100%;
     display: grid;
-    grid-template-rows: repeat(6, 100px);
+    grid-template-rows: repeat(5, var(--cell_height));
     grid-template-columns: repeat(7, 1fr);
-    gap: 1px;
+    gap: 10px;
     z-index: 20;
+}
+.daysHeader{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.daysHeader span{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .day{
     position: relative;
-    min-height: 100px;
+    height: var(--cell_height);
     z-index: 10;
-    background-color: white;
+    border: 1px solid #ccc;
 }
 .dayNumber{
     position: absolute;
@@ -36,8 +47,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    opacity: 50%;
+    height: 15px;
+    opacity: 70%;
 }
 .eventTitle{
     position: absolute;

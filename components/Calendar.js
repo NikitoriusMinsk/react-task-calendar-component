@@ -8,14 +8,13 @@ function daysInMonth (month, year) {
     return new Date(year, month+1, 0).getDate();
 }
 function getColumn(day){
-    const dayOfWeek = new Date(date.getFullYear(), date.getMonth()+1, day).getDay();
+    const dayOfWeek = new Date(date.getFullYear(), date.getMonth(), day).getDay();
     return dayOfWeek === 0 ? 7 : dayOfWeek;
 }
-
 const schedule = [
     {
         start: 10,
-        end: 16,
+        end: 21,
         title: 'Some Event',
         color: 'cadetblue'
     },
@@ -27,9 +26,15 @@ const schedule = [
     },
     {
         start: 8,
-        end: 9,
+        end: 10,
         title: 'Event',
         color: 'burlywood'
+    },
+    {
+        start: 26,
+        end: 28,
+        title: 'Event!',
+        color: 'brown'
     }
 ]
 
@@ -40,7 +45,7 @@ export default function Calendar() {
     const [events, setEvents] = useState([]);
 
     function configureDays(){
-        const dayCount = daysInMonth(date.getMonth()+1, date.getFullYear());
+        const dayCount = daysInMonth(date.getMonth(), date.getFullYear());
         const days = [];
         const positions = {};
         let row = 1;
@@ -80,7 +85,8 @@ export default function Calendar() {
                         gridColumnEnd: positions[event.end].column + 1,
                         gridRowStart: positions[event.start].row,
                         gridRowEnd: positions[event.end].row+1,
-                        backgroundColor: event.color
+                        backgroundColor: event.color,
+                        top: index*15
                     }}
                     title={event.title}
                 />
@@ -97,7 +103,9 @@ export default function Calendar() {
                                         gridColumnEnd: positions[event.end].column + 1,
                                         gridRowStart: i,
                                         gridRowEnd: i + 1,
-                                        backgroundColor: event.color
+                                        backgroundColor: event.color,
+                                        top: index*15
+
                                     }}
                                     title={event.title}
                                 />
@@ -112,7 +120,8 @@ export default function Calendar() {
                                         gridColumnEnd: 8,
                                         gridRowStart: i,
                                         gridRowEnd: i+1,
-                                        backgroundColor: event.color
+                                        backgroundColor: event.color,
+                                        top: index*15
                                     }}
                                     title={event.title}
                                 />
@@ -127,7 +136,8 @@ export default function Calendar() {
                                         gridColumnEnd: 8,
                                         gridRowStart: i,
                                         gridRowEnd: i+1,
-                                        backgroundColor: event.color
+                                        backgroundColor: event.color,
+                                        top: index*15
                                     }}
                                     title={event.title}
                                 />
@@ -151,14 +161,25 @@ export default function Calendar() {
     }, [positions])
 
     return (
-        <div className={styles.container}>
-            <div className={styles.events}>
-                {events}
+        <>
+            <div className={styles.daysHeader}>
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+                <span>Sun</span>
             </div>
-            <div className={styles.calendar}>
-                {days}
+            <div className={styles.container}>
+                <div className={styles.events}>
+                    {events}
+                </div>
+                <div className={styles.calendar}>
+                    {days}
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 
