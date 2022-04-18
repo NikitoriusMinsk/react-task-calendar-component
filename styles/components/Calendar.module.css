@@ -4,9 +4,10 @@
 .calendar{
     display: grid;
     width: 100%;
-    gap: 10px;
+    gap: 1px;
     grid-template-columns: repeat(6, 1fr);
-    grid-template-rows: repeat(5, 1fr);
+    background-color: black;
+    z-index: 10;
 }
 .events{
     position: absolute;
@@ -14,15 +15,16 @@
     left: 0;
     width: 100%;
     display: grid;
-    grid-template-rows: repeat(5, 100px);
+    grid-template-rows: repeat(6, 100px);
     grid-template-columns: repeat(6, 1fr);
-    gap: 10px;
+    gap: 1px;
+    z-index: 20;
 }
 .day{
     position: relative;
     min-height: 100px;
-    border: 1px solid black;
     z-index: 10;
+    background-color: white;
 }
 .dayNumber{
     position: absolute;
@@ -35,7 +37,7 @@
     justify-content: center;
     align-items: center;
     height: 100%;
-    opacity: 70%;
+    opacity: 50%;
 }
 .eventTitle{
     position: absolute;
