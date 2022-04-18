@@ -7,8 +7,8 @@ const date = new Date();
 function daysInMonth (month, year) {
     return new Date(year, month+1, 0).getDate();
 }
-function getColumn(day){
-    const dayOfWeek = new Date(date.getFullYear(), date.getMonth(), day).getDay();
+function getColumn(day, month, year){
+    const dayOfWeek = new Date(year, month, day).getDay();
     return dayOfWeek === 0 ? 7 : dayOfWeek;
 }
 const schedule = [
@@ -39,7 +39,6 @@ const schedule = [
 ]
 
 export default function Calendar() {
-
     const [positions, setPositions] = useState([]);
     const [days, setDays] = useState([]);
     const [events, setEvents] = useState([]);
@@ -50,7 +49,7 @@ export default function Calendar() {
         const positions = {};
         let row = 1;
         for (let i = 1; i <= dayCount; i++) {
-            const column = getColumn(i);
+            const column = getColumn(i, date.getMonth(), date.getFullYear());
             positions[i] = {
                 row,
                 column
@@ -161,7 +160,10 @@ export default function Calendar() {
     }, [positions])
 
     return (
-        <>
+        <div className={styles.container}>
+            <div className={styles.header}>
+                <h1>{date.toLocaleString('en', { month: 'long' })}, {date.getFullYear()}</h1>
+            </div>
             <div className={styles.daysHeader}>
                 <span>Mon</span>
                 <span>Tue</span>
@@ -171,7 +173,7 @@ export default function Calendar() {
                 <span>Sat</span>
                 <span>Sun</span>
             </div>
-            <div className={styles.container}>
+            <div className={styles.calendarContainer}>
                 <div className={styles.events}>
                     {events}
                 </div>
@@ -179,7 +181,7 @@ export default function Calendar() {
                     {days}
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

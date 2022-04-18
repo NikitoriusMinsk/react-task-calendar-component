@@ -1,6 +1,9 @@
 .container{
+    border: 1px solid #ccc;
+}
+.calendarContainer{
     position: relative;
-    --cell_height: 130px
+    --cell_height: 110px;
 }
 .calendar{
     display: grid;
@@ -20,16 +23,26 @@
     gap: 10px;
     z-index: 20;
 }
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px;
+}
 .daysHeader{
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
     margin-bottom: 10px;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    padding: 10px 0;
 }
 .daysHeader span{
     display: flex;
     justify-content: center;
     align-items: center;
+    font-weight: 700;
 }
 .day{
     position: relative;
