@@ -2,8 +2,6 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import styles from '/styles/components/Calendar.module.css'
 
-const date = new Date();
-
 function daysInMonth (month, year) {
     return new Date(year, month+1, 0).getDate();
 }
@@ -42,7 +40,8 @@ export default function Calendar() {
     const [positions, setPositions] = useState([]);
     const [days, setDays] = useState([]);
     const [events, setEvents] = useState([]);
-
+    const [date, setDate] = useState(new Date());
+    
     function configureDays(){
         const dayCount = daysInMonth(date.getMonth(), date.getFullYear());
         const days = [];
@@ -159,10 +158,24 @@ export default function Calendar() {
         configureEvents();
     }, [positions])
 
+    function nextMonth(){
+        date.setMonth(date.getMonth() + 1);
+        configureDays();
+    }
+
+    function prevMonth(){
+        date.setMonth(date.getMonth() - 1);
+        configureDays();
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 <h1>{date.toLocaleString('en', { month: 'long' })}, {date.getFullYear()}</h1>
+                <div className={styles.controls}>
+                    <span onClick={prevMonth}>{`<`}</span>
+                    <span onClick={nextMonth}>{`>`}</span>
+                </div>
             </div>
             <div className={styles.daysHeader}>
                 <span>Mon</span>

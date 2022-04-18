@@ -3,7 +3,9 @@
 }
 .calendarContainer{
     position: relative;
-    --cell_height: 110px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    --cell_height: 90px;
     --grid_gap: 5px;
 }
 .calendar{
@@ -26,15 +28,15 @@
 }
 .header{
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    gap: 25px;
     padding: 25px;
 }
 .daysHeader{
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
-    margin-bottom: 10px;
     border-bottom: 1px solid #ccc;
     border-top: 1px solid #ccc;
     padding: 10px 0;
@@ -66,4 +68,15 @@
 }
 .eventTitle{
     position: absolute;
+}
+.controls{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+}
+.controls span{
+    font-weight: 700;
+    font-size: 24px;
+    cursor: pointer;
 }
