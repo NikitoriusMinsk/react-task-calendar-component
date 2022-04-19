@@ -54,6 +54,7 @@
     align-items: center;
     height: 15px;
     opacity: 70%;
+    z-index: 10;
 }
 .eventTitle{
     position: absolute;
@@ -63,26 +64,13 @@
     position: relative;
     margin-top: 10px;
     margin-bottom: 10px;
-    --cell_height: 90px;
-    --grid_gap: 5px;
 }
 .monthContainer .calendar{
     display: grid;
     width: 100%;
-    gap: var(--grid_gap);
+    gap: 5px;
     grid-template-columns: repeat(7, 1fr);
     z-index: 10;
-}
-.monthContainer .events{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: grid;
-    grid-template-rows: repeat(5, var(--cell_height));
-    grid-template-columns: repeat(7, 1fr);
-    gap: var(--grid_gap);
-    z-index: 20;
 }
 .daysHeader{
     display: grid;
@@ -101,7 +89,7 @@
 }
 .day{
     position: relative;
-    height: var(--cell_height);
+    height: 90px;
     z-index: 10;
     border: 1px solid #ccc;
 }
@@ -120,25 +108,14 @@
     margin-bottom: 10px;
     overflow-y: scroll;
     max-height: 550px;
-    --cell_height: 1px;
 }
 .weekContainer .calendar{
     display: grid;
     width: 100%;
     grid-template-columns: 80px repeat(7, 1fr);
-    grid-template-rows: repeat(1440, var(--cell_height));
+    grid-template-rows: repeat(1440, 1px);
     z-index: 10;
     background-color: #ccc;
-}
-.weekContainer .events{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: grid;
-    grid-template-columns: 80px repeat(7, 1fr);
-    grid-template-rows: repeat(1440, var(--cell_height));
-    z-index: 20;
 }
 .weekHeader{
     display: grid;

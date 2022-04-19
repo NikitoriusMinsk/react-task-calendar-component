@@ -45,7 +45,7 @@ const schedule = {
             color: 'brown'
         },
         {
-            time: '11:30',
+            time: '23:00',
             title: 'Some Event',
             color: 'cadetblue'
         },
@@ -277,11 +277,9 @@ function MonthView({ date }){
                 <span>Sun</span>
             </div>
             <div className={styles.monthContainer}>
-                <div className={styles.events}>
-                    {events}
-                </div>
                 <div className={styles.calendar}>
                     {days}
+                    {events}
                 </div>
             </div>
         </>
@@ -395,11 +393,9 @@ function WeekView({ date }){
                 </span>
             </div>
             <div className={styles.weekContainer}>
-                <div className={styles.events}>
-                    {events}
-                </div>
                 <div className={styles.calendar}>
                     {hours}
+                    {events}
                     {lines}
                 </div>
             </div>
