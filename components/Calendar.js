@@ -12,25 +12,25 @@ function getColumn(day, month, year){
 const schedule = [
     {
         start: 10,
-        end: 21,
+        end: 10,
         title: 'Some Event',
         color: 'cadetblue'
     },
     {
         start: 21,
-        end: 23,
+        end: 21,
         title: 'Another Event',
         color: 'coral'
     },
     {
         start: 8,
-        end: 10,
+        end: 8,
         title: 'Event',
         color: 'burlywood'
     },
     {
         start: 26,
-        end: 28,
+        end: 26,
         title: 'Event!',
         color: 'brown'
     }
@@ -41,6 +41,7 @@ export default function Calendar() {
     const [days, setDays] = useState([]);
     const [events, setEvents] = useState([]);
     const [date, setDate] = useState(new Date());
+    const [view, setView] = useState('month');
     
     function configureDays(){
         const dayCount = daysInMonth(date.getMonth(), date.getFullYear());
@@ -158,12 +159,12 @@ export default function Calendar() {
         configureEvents();
     }, [positions])
 
-    function nextMonth(){
+    function next(){
         date.setMonth(date.getMonth() + 1);
         configureDays();
     }
 
-    function prevMonth(){
+    function prev(){
         date.setMonth(date.getMonth() - 1);
         configureDays();
     }
@@ -171,29 +172,56 @@ export default function Calendar() {
     return (
         <div className={styles.container}>
             <div className={styles.header}>
-                <h1>{date.toLocaleString('en', { month: 'long' })}, {date.getFullYear()}</h1>
-                <div className={styles.controls}>
-                    <span onClick={prevMonth}>{`<`}</span>
-                    <span onClick={nextMonth}>{`>`}</span>
+                <div className={styles.controlsContainer}>
+                    <h1>{date.toLocaleString('en', { month: 'long' })}, {date.getFullYear()}</h1>
+                    <div className={styles.controls}>
+                        <span onClick={prev}>{`<`}</span>
+                        <span onClick={next}>{`>`}</span>
+                    </div>
+                </div>
+                <div className={styles.switch}>
+                    <span 
+                        className={view === 'day' && styles.active}
+                        onClick={() => setView('day')}
+                    >
+                        Day
+                    </span>
+                    <span 
+                        className={view === 'week' && styles.active}
+                        onClick={() => setView('week')}
+                    >
+                        Week
+                    </span>
+                    <span 
+                        className={view === 'month' && styles.active}
+                        onClick={() => setView('month')}
+                    >
+                        Month
+                    </span>
                 </div>
             </div>
-            <div className={styles.daysHeader}>
-                <span>Mon</span>
-                <span>Tue</span>
-                <span>Wed</span>
-                <span>Thu</span>
-                <span>Fri</span>
-                <span>Sat</span>
-                <span>Sun</span>
-            </div>
-            <div className={styles.calendarContainer}>
-                <div className={styles.events}>
-                    {events}
+            {view === 'month' && <>
+                <div className={styles.daysHeader}>
+                    <span>Mon</span>
+                    <span>Tue</span>
+                    <span>Wed</span>
+                    <span>Thu</span>
+                    <span>Fri</span>
+                    <span>Sat</span>
+                    <span>Sun</span>
                 </div>
-                <div className={styles.calendar}>
-                    {days}
+                <div className={styles.calendarContainer}>
+                    <div className={styles.events}>
+                        {events}
+                    </div>
+                    <div className={styles.calendar}>
+                        {days}
+                    </div>
                 </div>
-            </div>
+            </>}
+            {view === 'week' && <>
+
+            </>}
         </div>
     )
 }

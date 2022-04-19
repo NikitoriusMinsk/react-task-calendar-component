@@ -1,12 +1,59 @@
 .container{
     border: 1px solid #ccc;
+    --cell_height: 90px;
+    --grid_gap: 5px;
+    background-color: white;
 }
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+    padding: 25px;
+    background-color: #E5E5E5;
+}
+.controlsContainer{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 20%;
+}
+.controls{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 25px;
+}
+.controls span{
+    font-weight: 700;
+    font-size: 24px;
+    cursor: pointer;
+}
+.switch{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    padding: 5px;
+    background-color: white;
+    border-radius: 3px;
+}
+.switch .active{
+    background-color: #22519D;
+    color: white;
+}
+.switch span{
+    padding: 11px 7px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+/* Month View */
 .calendarContainer{
     position: relative;
     margin-top: 10px;
     margin-bottom: 10px;
-    --cell_height: 90px;
-    --grid_gap: 5px;
+    background-clip: padding-box;
 }
 .calendar{
     display: grid;
@@ -25,13 +72,6 @@
     grid-template-columns: repeat(7, 1fr);
     gap: var(--grid_gap);
     z-index: 20;
-}
-.header{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 25px;
-    padding: 25px;
 }
 .daysHeader{
     display: grid;
@@ -69,14 +109,4 @@
 .eventTitle{
     position: absolute;
 }
-.controls{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-}
-.controls span{
-    font-weight: 700;
-    font-size: 24px;
-    cursor: pointer;
-}
+/* Week View */
