@@ -277,10 +277,8 @@ function MonthView({ date }){
                 <span>Sun</span>
             </div>
             <div className={styles.monthContainer}>
-                <div className={styles.calendar}>
-                    {days}
-                    {events}
-                </div>
+                {days}
+                {events}
             </div>
         </>
     )
@@ -393,11 +391,9 @@ function WeekView({ date }){
                 </span>
             </div>
             <div className={styles.weekContainer}>
-                <div className={styles.calendar}>
-                    {hours}
-                    {events}
-                    {lines}
-                </div>
+                {hours}
+                {events}
+                {lines}
             </div>
         </>
     )
