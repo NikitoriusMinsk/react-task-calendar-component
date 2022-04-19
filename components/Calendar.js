@@ -37,11 +37,79 @@ const schedule = [
 ]
 
 export default function Calendar() {
+
+    const [date, setDate] = useState(new Date());
+    const [view, setView] = useState('month');
+
+    function next(){
+        setDate(new Date(date.getFullYear(), date.getMonth() + 1));
+    }
+
+    function prev(){
+        setDate(new Date(date.getFullYear(), date.getMonth() - 1));
+    }
+
+    return (
+        <div className={styles.container}>
+            <div className={styles.header}>
+                <div className={styles.controlsContainer}>
+                    <h1>{date.toLocaleString('en', { month: 'long' })}, {date.getFullYear()}</h1>
+                    <div className={styles.controls}>
+                        <span onClick={prev}>{`<`}</span>
+                        <span onClick={next}>{`>`}</span>
+                    </div>
+                </div>
+                <div className={styles.switch}>
+                    <span 
+                        className={view === 'day' ? styles.active : null}
+                        onClick={() => setView('day')}
+                    >
+                        Day
+                    </span>
+                    <span 
+                        className={view === 'week' ? styles.active : null}
+                        onClick={() => setView('week')}
+                    >
+                        Week
+                    </span>
+                    <span 
+                        className={view === 'month' ? styles.active : null}
+                        onClick={() => setView('month')}
+                    >
+                        Month
+                    </span>
+                </div>
+            </div>
+            {view === 'month' && <MonthView date={date} />}
+        </div>
+    )
+}
+
+function Day({ number, children, ...props }){
+    return (
+        <div 
+            className={styles.day}
+            {...props}
+        >
+            <span className={styles.dayNumber}>{number}</span>
+            {children}
+        </div>
+    )
+}
+function Event({ title, ...props }){
+    return (
+        <div 
+            className={styles.event}
+            {...props}
+        >
+            <span className={styles.eventTitle}>{title}</span>
+        </div>
+    )
+}
+function MonthView({ date }){
     const [positions, setPositions] = useState([]);
     const [days, setDays] = useState([]);
     const [events, setEvents] = useState([]);
-    const [date, setDate] = useState(new Date());
-    const [view, setView] = useState('month');
     
     function configureDays(){
         const dayCount = daysInMonth(date.getMonth(), date.getFullYear());
@@ -152,98 +220,32 @@ export default function Calendar() {
 
     useEffect(() => {
         configureDays();
-    }, [])
+    }, [date])
 
     useEffect(() => {
         if (positions.length === 0) return
         configureEvents();
     }, [positions])
 
-    function next(){
-        date.setMonth(date.getMonth() + 1);
-        configureDays();
-    }
-
-    function prev(){
-        date.setMonth(date.getMonth() - 1);
-        configureDays();
-    }
-
-    return (
-        <div className={styles.container}>
-            <div className={styles.header}>
-                <div className={styles.controlsContainer}>
-                    <h1>{date.toLocaleString('en', { month: 'long' })}, {date.getFullYear()}</h1>
-                    <div className={styles.controls}>
-                        <span onClick={prev}>{`<`}</span>
-                        <span onClick={next}>{`>`}</span>
-                    </div>
+    return(
+        <>
+            <div className={styles.daysHeader}>
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+                <span>Sun</span>
+            </div>
+            <div className={styles.calendarContainer}>
+                <div className={styles.events}>
+                    {events}
                 </div>
-                <div className={styles.switch}>
-                    <span 
-                        className={view === 'day' && styles.active}
-                        onClick={() => setView('day')}
-                    >
-                        Day
-                    </span>
-                    <span 
-                        className={view === 'week' && styles.active}
-                        onClick={() => setView('week')}
-                    >
-                        Week
-                    </span>
-                    <span 
-                        className={view === 'month' && styles.active}
-                        onClick={() => setView('month')}
-                    >
-                        Month
-                    </span>
+                <div className={styles.calendar}>
+                    {days}
                 </div>
             </div>
-            {view === 'month' && <>
-                <div className={styles.daysHeader}>
-                    <span>Mon</span>
-                    <span>Tue</span>
-                    <span>Wed</span>
-                    <span>Thu</span>
-                    <span>Fri</span>
-                    <span>Sat</span>
-                    <span>Sun</span>
-                </div>
-                <div className={styles.calendarContainer}>
-                    <div className={styles.events}>
-                        {events}
-                    </div>
-                    <div className={styles.calendar}>
-                        {days}
-                    </div>
-                </div>
-            </>}
-            {view === 'week' && <>
-
-            </>}
-        </div>
-    )
-}
-
-function Day({ number, children, ...props }){
-    return (
-        <div 
-            className={styles.day}
-            {...props}
-        >
-            <span className={styles.dayNumber}>{number}</span>
-            {children}
-        </div>
-    )
-}
-function Event({ title, ...props }){
-    return (
-        <div 
-            className={styles.event}
-            {...props}
-        >
-            <span className={styles.eventTitle}>{title}</span>
-        </div>
+        </>
     )
 }
