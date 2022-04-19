@@ -40,7 +40,7 @@ const schedule = {
     ],
     19: [
         {
-            time: '09:30',
+            time: '09:45',
             title: 'Some Event',
             color: 'brown'
         },
@@ -285,6 +285,7 @@ function MonthView({ date }){
 function WeekView({ date }){
     const [hours, setHours] = useState();
     const [events, setEvents] = useState();
+    const [lines, setLines] = useState();
 
     function configureHours(){
         const hours = [];
@@ -331,6 +332,25 @@ function WeekView({ date }){
     }
 
     useEffect(() => {
+        const lines = [];
+        for (let i = 1; i < 9; i++) {
+            lines.push(
+                <div
+                    key={`l${i}`}
+                    className={styles.line}
+                    style={{
+                        gridColumnStart: i,
+                        gridColumnEnd: i + 1,
+                        gridRowStart: 1,
+                        gridRowEnd: 1440
+                    }}
+                />
+            )
+        }
+        setLines(lines);
+    }, [])
+
+    useEffect(() => {
         configureHours();
         configureEvents()
     }, [date])
@@ -374,6 +394,7 @@ function WeekView({ date }){
                 </div>
                 <div className={styles.calendar}>
                     {hours}
+                    {lines}
                 </div>
             </div>
         </>
