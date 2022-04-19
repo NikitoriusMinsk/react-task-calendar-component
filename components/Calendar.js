@@ -324,8 +324,8 @@ function WeekView({ date }){
                         style={{
                             gridColumnStart: column,
                             gridColumnEnd: column + 1,
-                            gridRowStart: parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1]),
-                            gridRowEnd: parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1]) + 60,
+                            gridRowStart: parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1]) > 0 ? parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1]) : 1,
+                            gridRowEnd: (parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1])) + 60,
                             backgroundColor: event.color,
                             height: 'auto'
                         }}
