@@ -48,6 +48,11 @@ const schedule = {
             time: '11:30',
             title: 'Some Event',
             color: 'cadetblue'
+        },
+        {
+            time: '10:45',
+            title: 'Some Event',
+            color: 'coral'
         }
     ]
 
