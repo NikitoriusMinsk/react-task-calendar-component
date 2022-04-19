@@ -139,7 +139,6 @@
     grid-template-columns: 80px repeat(7, 1fr);
     grid-template-rows: repeat(1440, var(--cell_height));
     z-index: 20;
-    padding-right: 5px;
 }
 .weekHeader{
     display: grid;

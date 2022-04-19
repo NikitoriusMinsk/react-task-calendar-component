@@ -117,6 +117,7 @@ export default function Calendar() {
                 <div className={styles.controlsContainer}>
                     {view === 'month' && <h1>{date.toLocaleString('en', { month: 'long' })}, {date.getFullYear()}</h1>}
                     {view ==='week' && <h1>{date.GetFirstDayOfWeek().toLocaleDateString('en', {month: 'long'})} {date.GetFirstDayOfWeek().getDate()} - {date.GetLastDayOfWeek().toLocaleDateString('en', {month: 'long'})} {date.GetLastDayOfWeek().getDate()} </h1>}
+                    {view === 'day' && <h1>{date.toLocaleDateString('en', {month: 'long'})} {date.getDate()}</h1>}
                     <div className={styles.controls}>
                         <span onClick={prev}>{`<`}</span>
                         <span onClick={next}>{`>`}</span>
