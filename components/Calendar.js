@@ -57,10 +57,17 @@ function getDayOfWeek(day, month, year){
     return dayOfWeek === 0 ? 7 : dayOfWeek;
 }
 Date.prototype.GetFirstDayOfWeek = function() {
-    return (new Date(this.setDate(this.getDate() - this.getDay()+ (this.getDay() == 0 ? -6:1) )));
+    const date = new Date(this.getTime());
+    return (new Date(date.setDate(date.getDate() - date.getDay()+ (date.getDay() == 0 ? -6:1) )));
 }
 Date.prototype.GetLastDayOfWeek = function() {
-    return (new Date(this.setDate(this.getDate() - this.getDay() +7)));
+    const date = new Date(this.getTime());
+    return (new Date(date.setDate(date.getDate() - date.getDay() +7)));
+}
+Date.prototype.getWeekDay = function(weekday) {
+    const date = new Date(this.getTime());
+    const day = this.getDay();
+    return new Date(date.setDate(date.getDate() - day + (day == 0 ? -6:1) + weekday));
 }
 
 export default function Calendar() {
@@ -104,7 +111,7 @@ export default function Calendar() {
             <div className={styles.header}>
                 <div className={styles.controlsContainer}>
                     {view === 'month' && <h1>{date.toLocaleString('en', { month: 'long' })}, {date.getFullYear()}</h1>}
-                    {view ==='week' && <h1>{date.toLocaleDateString('en', {month: 'long'})} {date.GetFirstDayOfWeek().getDate()}-{date.GetLastDayOfWeek().getDate()} </h1>}
+                    {view ==='week' && <h1>{date.GetFirstDayOfWeek().toLocaleDateString('en', {month: 'long'})} {date.GetFirstDayOfWeek().getDate()} - {date.GetLastDayOfWeek().toLocaleDateString('en', {month: 'long'})} {date.GetLastDayOfWeek().getDate()} </h1>}
                     <div className={styles.controls}>
                         <span onClick={prev}>{`<`}</span>
                         <span onClick={next}>{`>`}</span>
@@ -334,31 +341,31 @@ function WeekView({ date }){
                 <span />
                 <span>
                     <span>Mon</span>
-                    <span>{date.GetFirstDayOfWeek().getDate()}</span>
+                    <span>{date.getWeekDay(0).getDate()}</span>
                 </span>
                 <span>
                     <span>Tue</span>
-                    <span>{date.GetFirstDayOfWeek().getDate()+1}</span>
+                    <span>{date.getWeekDay(1).getDate()}</span>
                 </span>
                 <span>
                     <span>Wed</span>
-                    <span>{date.GetFirstDayOfWeek().getDate()+2}</span>
+                    <span>{date.getWeekDay(2).getDate()}</span>
                 </span>
                 <span>
                     <span>Thu</span>
-                    <span>{date.GetFirstDayOfWeek().getDate()+3}</span>
+                    <span>{date.getWeekDay(3).getDate()}</span>
                 </span>
                 <span>
                     <span>Fri</span>
-                    <span>{date.GetFirstDayOfWeek().getDate()+4}</span>
+                    <span>{date.getWeekDay(4).getDate()}</span>
                 </span>
                 <span>
                     <span>Sat</span>
-                    <span>{date.GetFirstDayOfWeek().getDate()+5}</span>
+                    <span>{date.getWeekDay(5).getDate()}</span>
                 </span>
                 <span>
                     <span>Sun</span>
-                    <span>{date.GetFirstDayOfWeek().getDate()+6}</span>
+                    <span>{date.getWeekDay(6).getDate()}</span>
                 </span>
             </div>
             <div className={styles.weekContainer}>
