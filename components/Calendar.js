@@ -6,40 +6,98 @@ const schedule = [
     {
         start: 10,
         end: 10,
+        time: '10:00',
         title: 'Some Event',
         color: 'cadetblue'
     },
     {
         start: 21,
         end: 21,
+        time: '21:00',
         title: 'Another Event',
         color: 'coral'
     },
     {
         start: 8,
         end: 8,
+        time: '08:00',
         title: 'Event',
         color: 'burlywood'
     },
     {
         start: 26,
         end: 26,
+        time: '00:00',
         title: 'Event!',
         color: 'brown'
-    }
+    },
+    {
+        start: 18,
+        end: 18,
+        time: '10:00',
+        title: 'Some Event',
+        color: 'burlywood'
+    },
+    {
+        start: 19,
+        end: 19,
+        time: '11:30',
+        title: 'Some Event',
+        color: 'cadetblue'
+    },
+    {
+        start: 19,
+        end: 19,
+        time: '09:30',
+        title: 'Some Event',
+        color: 'brown'
+    },
 ]
+function getDayOfWeek(day, month, year){
+    const dayOfWeek = new Date(year, month, day).getDay();
+    return dayOfWeek === 0 ? 7 : dayOfWeek;
+}
+Date.prototype.GetFirstDayOfWeek = function() {
+    return (new Date(this.setDate(this.getDate() - this.getDay()+ (this.getDay() == 0 ? -6:1) )));
+}
+Date.prototype.GetLastDayOfWeek = function() {
+    return (new Date(this.setDate(this.getDate() - this.getDay() +7)));
+}
 
 export default function Calendar() {
-
     const [date, setDate] = useState(new Date());
-    const [view, setView] = useState('month');
+    const [view, setView] = useState('week');
 
     function next(){
-        setDate(new Date(date.getFullYear(), date.getMonth() + 1));
+        switch(view){
+            case 'month':
+                setDate(new Date(date.getFullYear(), date.getMonth() + 1));
+                break;
+            case 'week':
+                setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7));
+                break;
+            case 'day':
+                setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() + 1));
+                break;
+            default:
+                break;
+        }
     }
 
     function prev(){
-        setDate(new Date(date.getFullYear(), date.getMonth() - 1));
+        switch(view){
+            case 'month':
+                setDate(new Date(date.getFullYear(), date.getMonth() - 1));
+                break;
+            case 'week':
+                setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() - 7));
+                break;
+            case 'day':
+                setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate() - 1));
+                break;
+            default:
+                break;
+        }
     }
 
     return (
@@ -47,6 +105,7 @@ export default function Calendar() {
             <div className={styles.header}>
                 <div className={styles.controlsContainer}>
                     {view === 'month' && <h1>{date.toLocaleString('en', { month: 'long' })}, {date.getFullYear()}</h1>}
+                    {view ==='week' && <h1>{date.toLocaleDateString('en', {month: 'long'})} {date.GetFirstDayOfWeek().getDate()}-{date.GetLastDayOfWeek().getDate()} </h1>}
                     <div className={styles.controls}>
                         <span onClick={prev}>{`<`}</span>
                         <span onClick={next}>{`>`}</span>
@@ -74,6 +133,7 @@ export default function Calendar() {
                 </div>
             </div>
             {view === 'month' && <MonthView date={date} />}
+            {view === 'week' && <WeekView date={date} />}
         </div>
     )
 }
@@ -85,11 +145,6 @@ function MonthView({ date }){
     
     function daysInMonth (month, year) {
         return new Date(year, month+1, 0).getDate();
-    }
-
-    function getDayOfWeek(day, month, year){
-        const dayOfWeek = new Date(year, month, day).getDay();
-        return dayOfWeek === 0 ? 7 : dayOfWeek;
     }
 
     function configureDays(){
@@ -265,7 +320,7 @@ function MonthView({ date }){
                 <span>Sat</span>
                 <span>Sun</span>
             </div>
-            <div className={styles.calendarContainer}>
+            <div className={styles.monthContainer}>
                 <div className={styles.events}>
                     {events}
                 </div>
@@ -277,14 +332,109 @@ function MonthView({ date }){
     )
 }
 
-function Day({ number, children, faded=false, ...props }){
+function WeekView({ date }){
+    const [hours, setHours] = useState();
+    const [events, setEvents] = useState();
+
+    function configureHours(){
+        const hours = [];
+        let hour = 0;
+        for (let i = 0; i < 1440; i+=60) {
+            hours.push(
+                <Hour
+                    key={`h${i}`}
+                    number={hour++}
+                    style={{
+                        gridColumnStart: 1,
+                        gridColumnEnd: 9,
+                        gridRowStart: i + 1,
+                        gridRowEnd: i + 60
+                    }}
+                />
+            )
+        }
+        setHours(hours);
+    }
+
+    function configureEvents(){
+        const events = schedule.map((event, index) => {
+            if ((event.start >= date.GetFirstDayOfWeek().getDate()) && (event.end <= date.GetLastDayOfWeek().getDate())) {
+                const column = getDayOfWeek(event.start, date.getMonth(), date.getFullYear()) + 1;
+                const hourMinutes = event.time.split(':');
+                return <Event
+                    key={`e${index}`}
+                    style={{
+                        gridColumnStart: column,
+                        gridColumnEnd: column + 1,
+                        gridRowStart: parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1]),
+                        gridRowEnd: parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1]) + 60,
+                        backgroundColor: event.color,
+                        height: 'auto'
+                    }}
+                    title={`${event.title}/${event.time}`}
+                />
+            }
+        })
+        setEvents(events);
+    }
+
+    useEffect(() => {
+        configureHours();
+        configureEvents()
+    }, [date])
+
+    return (
+        <>
+            <div className={styles.weekHeader}>
+                <span />
+                <span>
+                    <span>Mon</span>
+                    <span>{date.GetFirstDayOfWeek().getDate()}</span>
+                </span>
+                <span>
+                    <span>Tue</span>
+                    <span>{date.GetFirstDayOfWeek().getDate()+1}</span>
+                </span>
+                <span>
+                    <span>Wed</span>
+                    <span>{date.GetFirstDayOfWeek().getDate()+2}</span>
+                </span>
+                <span>
+                    <span>Thu</span>
+                    <span>{date.GetFirstDayOfWeek().getDate()+3}</span>
+                </span>
+                <span>
+                    <span>Fri</span>
+                    <span>{date.GetFirstDayOfWeek().getDate()+4}</span>
+                </span>
+                <span>
+                    <span>Sat</span>
+                    <span>{date.GetFirstDayOfWeek().getDate()+5}</span>
+                </span>
+                <span>
+                    <span>Sun</span>
+                    <span>{date.GetFirstDayOfWeek().getDate()+6}</span>
+                </span>
+            </div>
+            <div className={styles.weekContainer}>
+                <div className={styles.events}>
+                    {events}
+                </div>
+                <div className={styles.calendar}>
+                    {hours}
+                </div>
+            </div>
+        </>
+    )
+}
+
+function Day({ number, faded=false, ...props }){
     return (
         <div 
             className={`${styles.day} ${faded && styles.faded}`}
             {...props}
         >
             <span className={styles.dayNumber}>{number}</span>
-            {children}
         </div>
     )
 }
@@ -295,6 +445,16 @@ function Event({ title, ...props }){
             {...props}
         >
             <span className={styles.eventTitle}>{title}</span>
+        </div>
+    )
+}
+function Hour({ number, ...props}){
+    return (
+        <div 
+            className={styles.hour}
+            {...props}
+        >
+            <span className={styles.hourNumber}>{`${number < 10 ? `0${number}` : number}:00`}</span>
         </div>
     )
 }

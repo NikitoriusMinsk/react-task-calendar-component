@@ -1,7 +1,6 @@
+/* Shared Styles */
 .container{
     border: 1px solid #ccc;
-    --cell_height: 90px;
-    --grid_gap: 5px;
     background-color: white;
 }
 .header{
@@ -48,21 +47,33 @@
     border-radius: 3px;
     cursor: pointer;
 }
+.event{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 15px;
+    opacity: 70%;
+}
+.eventTitle{
+    position: absolute;
+}
 /* Month View */
-.calendarContainer{
+.monthContainer{
     position: relative;
     margin-top: 10px;
     margin-bottom: 10px;
-    background-clip: padding-box;
+    --cell_height: 90px;
+    --grid_gap: 5px;
 }
-.calendar{
+.monthContainer .calendar{
     display: grid;
     width: 100%;
     gap: var(--grid_gap);
     grid-template-columns: repeat(7, 1fr);
     z-index: 10;
 }
-.events{
+.monthContainer .events{
     position: absolute;
     top: 0;
     left: 0;
@@ -83,6 +94,7 @@
 }
 .daysHeader span{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-weight: 700;
@@ -101,15 +113,58 @@
     left: 5px;
     top: 5px;
 }
-.event{
+/* Week View */
+.weekContainer{
     position: relative;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow-y: scroll;
+    max-height: 550px;
+    --cell_height: 1px;
+    padding-right: 5px;
+}
+.weekContainer .calendar{
+    display: grid;
+    width: 100%;
+    grid-template-columns: 80px repeat(7, 1fr);
+    grid-template-rows: repeat(1440, var(--cell_height));
+    z-index: 10;
+    column-gap: 10px
+}
+.weekContainer .events{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: grid;
+    column-gap: 10px;
+    grid-template-columns: 80px repeat(7, 1fr);
+    grid-template-rows: repeat(1440, var(--cell_height));
+    z-index: 20;
+    padding-right: 5px;
+
+}
+.weekHeader{
+    display: grid;
+    grid-template-columns: 80px repeat(7, 1fr);
+    column-gap: 10px;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #ccc;
+    padding: 10px 0;
+}
+.weekHeader span{
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 15px;
-    opacity: 70%;
+    font-weight: 700;
 }
-.eventTitle{
-    position: absolute;
+.hour{
+    display: flex;
+    z-index: 10;
+    align-items: flex-start;
+    border-top: 1px solid #ccc;
 }
-/* Week View */
+.hourNumber{
+    margin-left: 20px;
+}
