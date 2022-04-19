@@ -2,57 +2,56 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import styles from '/styles/components/Calendar.module.css'
 
-const schedule = [
-    {
-        start: 10,
-        end: 10,
-        time: '10:00',
-        title: 'Some Event',
-        color: 'cadetblue'
-    },
-    {
-        start: 21,
-        end: 21,
-        time: '21:00',
-        title: 'Another Event',
-        color: 'coral'
-    },
-    {
-        start: 8,
-        end: 8,
-        time: '08:00',
-        title: 'Event',
-        color: 'burlywood'
-    },
-    {
-        start: 26,
-        end: 26,
-        time: '00:00',
-        title: 'Event!',
-        color: 'brown'
-    },
-    {
-        start: 18,
-        end: 18,
-        time: '10:00',
-        title: 'Some Event',
-        color: 'burlywood'
-    },
-    {
-        start: 19,
-        end: 19,
-        time: '11:30',
-        title: 'Some Event',
-        color: 'cadetblue'
-    },
-    {
-        start: 19,
-        end: 19,
-        time: '09:30',
-        title: 'Some Event',
-        color: 'brown'
-    },
-]
+const schedule = {
+    10: [
+        {
+            time: '10:00',
+            title: 'Some Event',
+            color: 'cadetblue'
+        },
+    ],
+    21: [
+        {
+            time: '21:00',
+            title: 'Another Event',
+            color: 'coral'
+        }
+    ],
+    8: [
+        {
+            time: '08:00',
+            title: 'Event',
+            color: 'burlywood'
+        }
+    ],
+    26: [
+        {
+            time: '00:00',
+            title: 'Event!',
+            color: 'brown'
+        }
+    ],
+    18: [
+        {
+            time: '10:00',
+            title: 'Some Event',
+            color: 'burlywood'
+        }
+    ],
+    19: [
+        {
+            time: '09:30',
+            title: 'Some Event',
+            color: 'brown'
+        },
+        {
+            time: '11:30',
+            title: 'Some Event',
+            color: 'cadetblue'
+        }
+    ]
+
+}
 function getDayOfWeek(day, month, year){
     const dayOfWeek = new Date(year, month, day).getDay();
     return dayOfWeek === 0 ? 7 : dayOfWeek;
@@ -66,7 +65,7 @@ Date.prototype.GetLastDayOfWeek = function() {
 
 export default function Calendar() {
     const [date, setDate] = useState(new Date());
-    const [view, setView] = useState('week');
+    const [view, setView] = useState('month');
 
     function next(){
         switch(view){
@@ -225,77 +224,21 @@ function MonthView({ date }){
     }
 
     function configureEvents(){
-        const events = schedule.map((event, index) => {
-            if (positions[event.start].row === positions[event.end].row) {
+        const events = Object.entries(schedule).map(([day, events]) => {
+            return events.map((event, index) => {
                 return <Event
                     key={`e${index}`}
                     style={{
-                        gridColumnStart: positions[event.start].column,
-                        gridColumnEnd: positions[event.end].column + 1,
-                        gridRowStart: positions[event.start].row,
-                        gridRowEnd: positions[event.end].row+1,
+                        gridColumnStart: positions[day].column,
+                        gridColumnEnd: positions[day].column + 1,
+                        gridRowStart: positions[day].row,
+                        gridRowEnd: positions[day].row+1,
                         backgroundColor: event.color,
                         top: index*15
                     }}
                     title={event.title}
                 />
-            } else {
-                const events = [];
-                for (let i = positions[event.start].row; i <= positions[event.end].row; i++) {
-                    switch (i) {
-                        case positions[event.end].row:
-                            events.push(
-                                <Event
-                                    key={`e${index}_${i}`}
-                                    style={{
-                                        gridColumnStart: 1,
-                                        gridColumnEnd: positions[event.end].column + 1,
-                                        gridRowStart: i,
-                                        gridRowEnd: i + 1,
-                                        backgroundColor: event.color,
-                                        top: index*15
-
-                                    }}
-                                    title={event.title}
-                                />
-                            )
-                            break;
-                        case positions[event.start].row:
-                            events.push(
-                                <Event
-                                    key={`e${index}_${i}`}
-                                    style={{
-                                        gridColumnStart: positions[event.start].column,
-                                        gridColumnEnd: 8,
-                                        gridRowStart: i,
-                                        gridRowEnd: i+1,
-                                        backgroundColor: event.color,
-                                        top: index*15
-                                    }}
-                                    title={event.title}
-                                />
-                            )
-                            break;
-                        default:
-                            events.push(
-                                <Event
-                                    key={`e${index}_${i}`}
-                                    style={{
-                                        gridColumnStart: 1,
-                                        gridColumnEnd: 8,
-                                        gridRowStart: i,
-                                        gridRowEnd: i+1,
-                                        backgroundColor: event.color,
-                                        top: index*15
-                                    }}
-                                    title={event.title}
-                                />
-                            )
-                            break;
-                    }
-                }
-                return events;
-            }
+            })
         })
         setEvents(events);
     }
@@ -357,22 +300,24 @@ function WeekView({ date }){
     }
 
     function configureEvents(){
-        const events = schedule.map((event, index) => {
-            if ((event.start >= date.GetFirstDayOfWeek().getDate()) && (event.end <= date.GetLastDayOfWeek().getDate())) {
-                const column = getDayOfWeek(event.start, date.getMonth(), date.getFullYear()) + 1;
-                const hourMinutes = event.time.split(':');
-                return <Event
-                    key={`e${index}`}
-                    style={{
-                        gridColumnStart: column,
-                        gridColumnEnd: column + 1,
-                        gridRowStart: parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1]),
-                        gridRowEnd: parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1]) + 60,
-                        backgroundColor: event.color,
-                        height: 'auto'
-                    }}
-                    title={`${event.title}/${event.time}`}
-                />
+        const events = Object.entries(schedule).map(([day, events]) => {
+            if ((day >= date.GetFirstDayOfWeek().getDate()) && (day <= date.GetLastDayOfWeek().getDate())) {
+                const column = getDayOfWeek(day, date.getMonth(), date.getFullYear()) + 1;
+                return events.map((event, index) => {
+                    const hourMinutes = event.time.split(':');
+                    return <Event
+                        key={`e${index}`}
+                        style={{
+                            gridColumnStart: column,
+                            gridColumnEnd: column + 1,
+                            gridRowStart: parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1]),
+                            gridRowEnd: parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1]) + 60,
+                            backgroundColor: event.color,
+                            height: 'auto'
+                        }}
+                        title={`${event.title}/${event.time}`}
+                    />
+                })
             }
         })
         setEvents(events);
