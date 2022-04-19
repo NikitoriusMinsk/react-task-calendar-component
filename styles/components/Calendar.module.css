@@ -17,7 +17,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: 20%;
+    width: 25%;
 }
 .controls{
     display: flex;
@@ -92,6 +92,9 @@
     height: var(--cell_height);
     z-index: 10;
     border: 1px solid #ccc;
+}
+.faded {
+    opacity: 0.3;
 }
 .dayNumber{
     position: absolute;

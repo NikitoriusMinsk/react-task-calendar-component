@@ -2,13 +2,6 @@ import React from 'react'
 import { useEffect, useState } from 'react';
 import styles from '/styles/components/Calendar.module.css'
 
-function daysInMonth (month, year) {
-    return new Date(year, month+1, 0).getDate();
-}
-function getColumn(day, month, year){
-    const dayOfWeek = new Date(year, month, day).getDay();
-    return dayOfWeek === 0 ? 7 : dayOfWeek;
-}
 const schedule = [
     {
         start: 10,
@@ -53,7 +46,7 @@ export default function Calendar() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.controlsContainer}>
-                    <h1>{date.toLocaleString('en', { month: 'long' })}, {date.getFullYear()}</h1>
+                    {view === 'month' && <h1>{date.toLocaleString('en', { month: 'long' })}, {date.getFullYear()}</h1>}
                     <div className={styles.controls}>
                         <span onClick={prev}>{`<`}</span>
                         <span onClick={next}>{`>`}</span>
@@ -85,39 +78,28 @@ export default function Calendar() {
     )
 }
 
-function Day({ number, children, ...props }){
-    return (
-        <div 
-            className={styles.day}
-            {...props}
-        >
-            <span className={styles.dayNumber}>{number}</span>
-            {children}
-        </div>
-    )
-}
-function Event({ title, ...props }){
-    return (
-        <div 
-            className={styles.event}
-            {...props}
-        >
-            <span className={styles.eventTitle}>{title}</span>
-        </div>
-    )
-}
 function MonthView({ date }){
-    const [positions, setPositions] = useState([]);
-    const [days, setDays] = useState([]);
-    const [events, setEvents] = useState([]);
+    const [positions, setPositions] = useState();
+    const [days, setDays] = useState();
+    const [events, setEvents] = useState();
     
+    function daysInMonth (month, year) {
+        return new Date(year, month+1, 0).getDate();
+    }
+
+    function getDayOfWeek(day, month, year){
+        const dayOfWeek = new Date(year, month, day).getDay();
+        return dayOfWeek === 0 ? 7 : dayOfWeek;
+    }
+
     function configureDays(){
         const dayCount = daysInMonth(date.getMonth(), date.getFullYear());
         const days = [];
         const positions = {};
+        // fill current month days
         let row = 1;
         for (let i = 1; i <= dayCount; i++) {
-            const column = getColumn(i, date.getMonth(), date.getFullYear());
+            const column = getDayOfWeek(i, date.getMonth(), date.getFullYear());
             positions[i] = {
                 row,
                 column
@@ -137,6 +119,51 @@ function MonthView({ date }){
             if (column === 7) {
                 row++;
             }
+        }
+        // fill previous month days
+        const prevDaysCount = getDayOfWeek(1, date.getMonth(), date.getFullYear()) - 1;
+        const prevMonthDays = daysInMonth(date.getMonth() - 1, date.getFullYear());
+        for (let i = prevMonthDays; i > prevMonthDays - prevDaysCount; i--) {
+            const column = getDayOfWeek(i, date.getMonth() - 1, date.getFullYear());
+            positions[-i] = {
+                row: 1,
+                column
+            }
+            days.unshift(
+                <Day
+                    key={`dp${i}`}
+                    number={i}
+                    style={{
+                        gridColumnStart: column,
+                        gridColumnEnd: column + 1,
+                        gridRowStart: 1,
+                        gridRowEnd: 2
+                    }}
+                    faded
+                />
+            )
+        }
+        //fill future month days
+        const nextDaysCount = 7 - getDayOfWeek(dayCount, date.getMonth(), date.getFullYear());
+        for (let i = 1; i <= nextDaysCount; i++) {
+            const column = getDayOfWeek(i, date.getMonth() + 1, date.getFullYear());
+            positions[`future${i}`] = {
+                row,
+                column
+            }
+            days.push(
+                <Day
+                    key={`df${i}`}
+                    number={i}
+                    style={{
+                        gridColumnStart: column,
+                        gridColumnEnd: column + 1,
+                        gridRowStart: row,
+                        gridRowEnd: row + 1
+                    }}
+                    faded
+                />
+            )
         }
         setPositions(positions);
         setDays(days);
@@ -223,7 +250,7 @@ function MonthView({ date }){
     }, [date])
 
     useEffect(() => {
-        if (positions.length === 0) return
+        if (!positions) return
         configureEvents();
     }, [positions])
 
@@ -247,5 +274,27 @@ function MonthView({ date }){
                 </div>
             </div>
         </>
+    )
+}
+
+function Day({ number, children, faded=false, ...props }){
+    return (
+        <div 
+            className={`${styles.day} ${faded && styles.faded}`}
+            {...props}
+        >
+            <span className={styles.dayNumber}>{number}</span>
+            {children}
+        </div>
+    )
+}
+function Event({ title, ...props }){
+    return (
+        <div 
+            className={styles.event}
+            {...props}
+        >
+            <span className={styles.eventTitle}>{title}</span>
+        </div>
     )
 }
