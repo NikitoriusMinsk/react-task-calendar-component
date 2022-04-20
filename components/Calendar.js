@@ -38,7 +38,7 @@ const schedule = {
             color: 'burlywood'
         }
     ],
-    19: [
+    20: [
         {
             time: '09:45',
             title: 'Some Event',
@@ -50,9 +50,14 @@ const schedule = {
             color: 'cadetblue'
         },
         {
-            time: '10:45',
+            time: '10:50',
             title: 'Some Event',
             color: 'coral'
+        },
+        {
+            time: '10:30',
+            title: 'Event',
+            color: 'burlywood'
         }
     ]
 
@@ -117,7 +122,7 @@ export default function Calendar() {
                 <div className={styles.controlsContainer}>
                     {view === 'month' && <h1>{date.toLocaleString('en', { month: 'long' })}, {date.getFullYear()}</h1>}
                     {view ==='week' && <h1>{date.GetFirstDayOfWeek().toLocaleDateString('en', {month: 'long'})} {date.GetFirstDayOfWeek().getDate()} - {date.GetLastDayOfWeek().toLocaleDateString('en', {month: 'long'})} {date.GetLastDayOfWeek().getDate()} </h1>}
-                    {view === 'day' && <h1>{date.toLocaleDateString('en', {month: 'long'})} {date.getDate()}</h1>}
+                    {view === 'day' && <h1>{date.toLocaleDateString('en', {month: 'long'})} {date.getDate()}, {date.getFullYear()}</h1>}
                     <div className={styles.controls}>
                         <span onClick={prev}>{`<`}</span>
                         <span onClick={next}>{`>`}</span>
@@ -146,6 +151,7 @@ export default function Calendar() {
             </div>
             {view === 'month' && <MonthView date={date} />}
             {view === 'week' && <WeekView date={date} />}
+            {view === 'day' && <DayView date={date} />}
         </div>
     )
 }
@@ -321,7 +327,7 @@ function WeekView({ date }){
                             gridColumnStart: column,
                             gridColumnEnd: column + 1,
                             gridRowStart: parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1]) > 0 ? parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1]) : 1,
-                            gridRowEnd: (parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1])) + 60,
+                            gridRowEnd: (parseInt(hourMinutes[0]) * 60 + parseInt(hourMinutes[1])) + 25,
                             backgroundColor: event.color,
                             height: 'auto'
                         }}
@@ -394,6 +400,72 @@ function WeekView({ date }){
                 {hours}
                 {events}
                 {lines}
+            </div>
+        </>
+    )
+}
+
+function DayView({ date }){
+    const [hours, setHours] = useState();
+    const [events, setEvents] = useState();
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    function configureHours(){
+        const hours = [];
+        let hour = 0;
+        for (let i = 0; i < 1440; i+=60) {
+            hours.push(
+                <Hour
+                    key={`h${i}`}
+                    number={hour++}
+                    style={{
+                        gridColumnStart: 1,
+                        gridColumnEnd: 66,
+                        gridRowStart: i + 1,
+                        gridRowEnd: i + 60
+                    }}
+                />
+            )
+        }
+        setHours(hours);
+    }
+
+    function configureEvents(){
+        const events = Object.entries(schedule).map(([day, events]) => {
+            if (day == date.getDate()) {
+                return events.map((event, index) => {
+                    const hourMinutes = event.time.split(':');
+                    return <Event
+                        key={`e${index}`}
+                        style={{
+                            gridColumnStart: parseInt(hourMinutes[1]) > 0 ? parseInt(hourMinutes[1])+5 : 5,
+                            gridColumnEnd: parseInt(hourMinutes[1]) + 15,
+                            gridRowStart: parseInt(hourMinutes[0]) * 60 > 0 ? parseInt(hourMinutes[0]) * 60 : 1,
+                            gridRowEnd: parseInt(hourMinutes[0]) * 60 + 60,
+                            backgroundColor: event.color,
+                            height: 'auto'
+                        }}
+                        title={`${event.title}/${event.time}`}
+                    />
+                })
+            }
+        })
+        setEvents(events);
+    }
+
+    useEffect(() => {
+        configureHours();
+        configureEvents()
+    }, [date])
+
+    return (
+        <>
+            <div className={styles.dayHeader}>
+                <span>{dayNames[date.getDay()]}</span>
+            </div>
+            <div className={styles.dayContainer}>
+                {hours}
+                {events}
             </div>
         </>
     )
