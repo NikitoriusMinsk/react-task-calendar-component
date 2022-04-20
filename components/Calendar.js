@@ -77,7 +77,7 @@ Date.prototype.GetFirstDayOfWeek = function() {
 }
 Date.prototype.GetLastDayOfWeek = function() {
     const date = new Date(this.getTime());
-    return (new Date(date.setDate(date.getDate() - date.getDay())));
+    return (new Date(date.setDate(date.getDate() - date.getDay() + (date.getDay() == 0 ? 0:7))));
 }
 Date.prototype.getWeekDay = function(weekday) {
     const date = new Date(this.getTime());
