@@ -4,7 +4,7 @@ import styles from '/styles/components/Calendar.module.css'
 
 const today = new Date();
 
-const schedule = [
+const _schedule = [
     {
         date: new Date(today.getFullYear(), today.getMonth(), 3),
         events: [
@@ -12,6 +12,16 @@ const schedule = [
                 time: '10:00',
                 title: 'Meeting',
                 color: '#00bcd4'
+            },
+            {
+                time: '10:15',
+                title: 'Meeting',
+                color: 'brown'
+            },
+            {
+                time: '11:05',
+                title: 'Meeting',
+                color: 'cadetblue'
             }
         ]
     },
@@ -85,7 +95,7 @@ Date.prototype.getWeekDay = function(weekday) {
     return new Date(date.setDate(date.getDate() - day + (day == 0 ? -6:1) + weekday));
 }
 
-export default function Calendar() {
+export default function Calendar({ schedule=_schedule }) {
     const [date, setDate] = useState(new Date());
     const [view, setView] = useState('month');
 
@@ -154,14 +164,14 @@ export default function Calendar() {
                     </span>
                 </div>
             </div>
-            {view === 'month' && <MonthView date={date} />}
-            {view === 'week' && <WeekView date={date} />}
-            {view === 'day' && <DayView date={date} />}
+            {view === 'month' && <MonthView date={date} schedule={schedule} />}
+            {view === 'week' && <WeekView date={date} schedule={schedule} />}
+            {view === 'day' && <DayView date={date} schedule={schedule} />}
         </div>
     )
 }
 
-function MonthView({ date }){
+function MonthView({ date, schedule }){
     const [positions, setPositions] = useState();
     const [days, setDays] = useState();
     const [events, setEvents] = useState();
@@ -295,7 +305,7 @@ function MonthView({ date }){
     )
 }
 
-function WeekView({ date }){
+function WeekView({ date, schedule }){
     const [hours, setHours] = useState();
     const [events, setEvents] = useState();
     const [lines, setLines] = useState();
@@ -413,7 +423,7 @@ function WeekView({ date }){
     )
 }
 
-function DayView({ date }){
+function DayView({ date, schedule }){
     const [hours, setHours] = useState();
     const [events, setEvents] = useState();
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
