@@ -82,15 +82,15 @@ function getDayOfWeek(day, month, year){
     return dayOfWeek === 0 ? 7 : dayOfWeek;
 }
 Date.prototype.GetFirstDayOfWeek = function() {
-    const date = new Date(this.getTime());
+    const date = new Date(this.getFullYear(), this.getMonth(), this.getDate());
     return (new Date(date.setDate(date.getDate() - date.getDay() + (date.getDay() == 0 ? -6:1) )));
 }
 Date.prototype.GetLastDayOfWeek = function() {
-    const date = new Date(this.getTime());
+    const date = new Date(this.getFullYear(), this.getMonth(), this.getDate());
     return (new Date(date.setDate(date.getDate() - date.getDay() + (date.getDay() == 0 ? 0:7))));
 }
 Date.prototype.getWeekDay = function(weekday) {
-    const date = new Date(this.getTime());
+    const date = new Date(this.getFullYear(), this.getMonth(), this.getDate());
     const day = this.getDay();
     return new Date(date.setDate(date.getDate() - day + (day == 0 ? -6:1) + weekday));
 }
